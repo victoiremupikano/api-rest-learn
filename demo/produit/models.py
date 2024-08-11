@@ -3,9 +3,9 @@ from django.db import models
 # Create your models here.
 class Produit (models.Model):
     designation=models.CharField(max_length=50,null=False,blank=False)
-    description=models.FloatField(max_length=50,null=False,blank=True)
-    prix=models.FloatField(default=0,blank=False)
-    qt=models.FloatField(default=0,blank=False)
+    description=models.CharField(max_length=50,null=True,blank=True)
+    prix=models.FloatField(default=0,null=False, blank=False)
+    qt=models.FloatField(default=0,null=False, blank=False)
 
 class Client (models.Model):
     nom_client=models.CharField(max_length=50,null=False,blank=False)
