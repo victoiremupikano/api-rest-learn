@@ -1,0 +1,9 @@
+venv
+*.pyc
+staticfiles
+.env
+media
+env
+env/
+env_win
+env_win/
