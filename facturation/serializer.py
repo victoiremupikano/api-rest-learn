@@ -7,7 +7,7 @@ class ProduitSerializer(serializers.ModelSerializer):
     
     class Meta:
         model=Produit
-        fields=['id','designation','description','pu','qt','image']
+        fields=['id','designation','description','pu','qt','image','image64']
         
     def create(self,validated_data):
         validated_data.pop('image64')
@@ -32,7 +32,7 @@ class FactureSerializer(serializers.ModelSerializer):
     
 class TransactionSerializer(serializers.ModelSerializer):
     facture=serializers.SerializerMethodField(read_only=True)
-    fatcure_id=serializers.CharField(write_only=True,allow_null=False)
+    facture_id=serializers.CharField(write_only=True,allow_null=False)
     
     produit=serializers.SerializerMethodField(read_only=True)
     produit_id=serializers.CharField(write_only=True,allow_null=False)
@@ -50,4 +50,4 @@ class TransactionSerializer(serializers.ModelSerializer):
     
     def create(self,validated_data):
         validated_data.pop('facture','produit')
-        return Produit.objects.create(**validated_data)
+        return Transation.objects.create(**validated_data)

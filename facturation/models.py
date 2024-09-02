@@ -18,7 +18,7 @@ class Facture(models.Model):
 
 class Transation(models.Model):
     qt_trans = models.IntegerField(default=0, blank=False)
-    date_trans = models.DateField(null=False, blank=False)  # Enregistre la date de création
+    date_trans = models.DateField(auto_now_add=True)  # Enregistre la date de création
     facture = models.ForeignKey(Facture, on_delete=models.CASCADE)
     produit = models.ForeignKey(Produit,default=0,null=False, on_delete=models.CASCADE)
     prix_unitaire = models.FloatField(default=0, blank=False)

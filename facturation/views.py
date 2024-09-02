@@ -2,7 +2,7 @@
 from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework import  generics
-#from services.images import add_photo
+from facturation.services.images import add_photo
 # importation des modesls
 from facturation.models import Produit, Client, Facture, Transation 
 # importation des serializers
@@ -104,11 +104,31 @@ class TransactionListCreate(generics.ListCreateAPIView):
     queryset=Transation.objects.all()  # pylint: disable=E1101
     serializer_class=TransactionSerializer
     
+    def perform_create(self,serializer):
+        facture_id=serializer.validated_data.get('facture_id')
+        facture=Facture.objects.get(id=facture_id)
+        serializer.save(facture=facture)
+        
+        produit_id=serializer.validated_data.get('produit_id')
+        produit=Produit.objects.get(id=produit_id)
+        serializer.save(produit=produit)
+    
+    
  # UpdateAPIView est une methode generic qui permet la modification  des donnees
 class TransactionUpdateView(generics.UpdateAPIView):
     queryset=Transation.objects.all()    # pylint: disable=E1101
     serializer_class=TransactionSerializer
     lookup_field='pk'
+    
+    def perform_update(self,serializer):
+        facture_id=serializer.validated_data.get('facture_id')
+        facture=Facture.objects.get(id=facture_id)
+        serializer.save(facture=facture)
+        
+        produit_id=serializer.validated_data.get('produit_id')
+        produit=Produit.objects.get(id=produit_id)
+        serializer.save(produit=produit)
+    
   # DestroyAPIView est une methode generic qui permet la suppression des donnees  
 class TransactionDeleteView(generics.DestroyAPIView):
     queryset=Transation.objects.all()      # pylint: disable=E1101
