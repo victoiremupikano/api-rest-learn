@@ -18,8 +18,8 @@ class Facture(models.Model):
     client=models.ForeignKey(Client,on_delete=models.CASCADE)
 
 class Transation(models.Model):
-    qt_trans=models.IntegerField(default=0,blank=False)
-    date_trans=models.DateField(null=False,blank=False,auto_now_add=True)  # Enregistre la date de création
+    qt_trans=models.IntegerField(null=False,blank=False)
+    date_trans=models.DateField(null=False,auto_now_add=True)  # Enregistre la date de création
     facture=models.ForeignKey(Facture,on_delete=models.CASCADE)
     produit=models.ForeignKey(Produit,on_delete=models.CASCADE)
-    prix_unitaire=models.FloatField(default=0,blank=False)
+    prix_unitaire=models.FloatField(null=False,blank=False)

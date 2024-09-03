@@ -2,8 +2,9 @@ from django.shortcuts import render
 import django
 from rest_framework.response import Response
 from rest_framework import permissions, generics, status
+from services.mixins import QSFilterWithFacture
 from services.image import add_photo
-from . serializer import ClientSerializer, FactureSerializer, ProduitSerializer
+from . serializer import ClientSerializer, FactureSerializer, ProduitSerializer, TransactionSerializer
 from . models import Produit, Client, Facture, Transation
 
 
@@ -101,3 +102,48 @@ class FactureDeleteView(generics.DestroyAPIView):
     serializer_class=FactureSerializer   
     
     lookup_field='pk'    
+
+# transaction
+class TransactionDetailView(generics.RetrieveAPIView):
+    queryset = Transation.objects.all()  # pylint: disable=E1101
+    serializer_class = TransactionSerializer
+    
+    # ListCreateAPIView est une methode generic qui permet de lister plusieurs itemes et de creer les donnees
+
+class TransactionListCreate(generics.ListCreateAPIView):
+    queryset=Transation.objects.all()  # pylint: disable=E1101
+    serializer_class=TransactionSerializer
+    
+    def perform_create(self,serializer):
+        facture_id=serializer.validated_data.get('facture_id')
+        facture=Facture.objects.get(id=facture_id)        
+        produit_id=serializer.validated_data.get('produit_id')
+        produit=Produit.objects.get(id=produit_id)
+        serializer.save(facture=facture, produit=produit)
+
+class TransactionWithFactureListCreate(
+    QSFilterWithFacture,
+    generics.ListAPIView):
+    queryset=Transation.objects.all()  # pylint: disable=E1101
+    serializer_class=TransactionSerializer    
+    
+class TransactionUpdateView(generics.UpdateAPIView):
+    queryset=Transation.objects.all()    # pylint: disable=E1101
+    serializer_class=TransactionSerializer
+    lookup_field='pk'
+    
+    def perform_update(self,serializer):
+        facture_id=serializer.validated_data.get('facture_id')
+        facture=Facture.objects.get(id=facture_id)        
+        produit_id=serializer.validated_data.get('produit_id')
+        produit=Produit.objects.get(id=produit_id)
+        serializer.save(facture=facture, produit=produit)
+    
+  # DestroyAPIView est une methode generic qui permet la suppression des donnees  
+
+class TransactionDeleteView(generics.DestroyAPIView):
+    queryset=Transation.objects.all()      # pylint: disable=E1101
+    serializer_class=TransactionSerializer
+    lookup_field='pk'
+    
+     

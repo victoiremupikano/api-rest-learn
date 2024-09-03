@@ -15,6 +15,13 @@ from . views import (
     FactureListCreateView,
     FactureUpdateView,
     FactureDeleteView,
+
+    # transaction 
+    TransactionDetailView,
+    TransactionListCreate,
+    TransactionWithFactureListCreate,
+    TransactionUpdateView,
+    TransactionDeleteView
 )
 
 urlpatterns = [
@@ -33,4 +40,10 @@ urlpatterns = [
     path('facture-list-create/', FactureListCreateView.as_view(), name='facture-list-create'),
     path('facture-update/<int:pk>/', FactureUpdateView.as_view(), name='facture-update'),
     path('facture-delete/<int:pk>/', FactureDeleteView.as_view(), name='facture-delete'),
+    # transaction 
+    path('transaction-detail/<int:pk>/',TransactionDetailView.as_view(),name='transaction-detail'),
+    path('transaction-list-create/',TransactionListCreate.as_view(),name='transaction-list-create'),
+    path('transaction-list-with-facture/<int:facture_id>/',TransactionWithFactureListCreate.as_view(),name='transaction-list-with-facture'),
+    path('transaction-update/<int:pk>/',TransactionUpdateView.as_view(),name='transaction-update-view'),
+    path('transaction-delete/<int:pk>/',TransactionDeleteView.as_view(),name='transaction-delete')
 ]

@@ -30,8 +30,29 @@ class FactureSerializer(serializers.ModelSerializer):
     def get_client(self, obj):
         serializer=ClientSerializer(obj.client, many=False)
         return serializer.data
+    
+    def create(self, validated_data):
+        validated_data.pop('client_id')
+        return Facture.objects.create(**validated_data)
 
-class TransationSerializer(serializers.ModelSerializer):
+class TransactionSerializer(serializers.ModelSerializer):
+    facture=serializers.SerializerMethodField(read_only=True)
+    facture_id=serializers.CharField(write_only=True,allow_null=False)
+    produit=serializers.SerializerMethodField(read_only=True)
+    produit_id=serializers.CharField(write_only=True,allow_null=False)
+    
     class Meta:
-        model=Transation    
-        fields=['numero', 'date_fact', 'client']           
+        model = Transation
+        fields = ['id', 'qt_trans', 'date_trans', 'facture', 'facture_id', 'produit', 'produit_id', 'prix_unitaire']
+    
+    def get_produit(self,obj):
+        serializer=ProduitSerializer(obj.produit,many=False)
+        return serializer.data
+    
+    def get_facture(self,obj):
+        serializer=FactureSerializer(obj.facture,many=False)
+        return serializer.data
+    
+    def create(self,validated_data):
+        validated_data.pop('facture','produit')
+        return Transation.objects.create(**validated_data)
