@@ -3,23 +3,21 @@ from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
 
 # Create your models here.
 class UserManager(BaseUserManager):
-    def create_user(self, email, name, is_active, staff, password=None):
+    def create_user(self, email, name, password=None):
         user=self.model(
             email=email,
             name=name,
-            is_active=is_active,
-            staff=staff
+            is_active=True,
+            staff=False
         )
         user.set_password(password)
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, email, name, is_active, staff, password=None):
+    def create_superuser(self, email, name, password=None):
         user=self.create_user(
             email=email,
             name=name,
-            is_active=is_active,
-            staff=staff,
             password=password
         )
         user.is_admin=True
