@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.db import models
 
 # Create your models here.
@@ -7,15 +8,33 @@ class Produit (models.Model):
     prix=models.FloatField(default=0,null=False,blank=False)
     qt=models.FloatField(default=0,null=False,blank=False)
     image=models.ImageField(upload_to='Images/Produit', null=True, blank=True)
+    user=models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        null=False,
+        blank=False,
+        on_delete=models.PROTECT
+    )
 
 class Client (models.Model):
     nom_client=models.CharField(max_length=50,null=False,blank=False)
     phone=models.CharField(max_length=25,null=False,blank=False, unique=True)
-    
+    user=models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        null=False,
+        blank=False,
+        on_delete=models.PROTECT
+    )
+
 class Facture(models.Model):
     numero=models.IntegerField(null=False,blank=False, unique=True)
     date_fact=models.DateField(auto_now_add=True)  # Enregistre la date de création
     client=models.ForeignKey(Client,on_delete=models.CASCADE)
+    user=models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        null=False,
+        blank=False,
+        on_delete=models.PROTECT
+    )
 
 class Transation(models.Model):
     qt_trans=models.IntegerField(null=False,blank=False)
@@ -23,3 +42,9 @@ class Transation(models.Model):
     facture=models.ForeignKey(Facture,on_delete=models.CASCADE)
     produit=models.ForeignKey(Produit,on_delete=models.CASCADE)
     prix_unitaire=models.FloatField(null=False,blank=False)
+    user=models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        null=False,
+        blank=False,
+        on_delete=models.PROTECT
+    )
