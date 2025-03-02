@@ -12,8 +12,8 @@ class CustomTokenVerifySerializer(TokenVerifySerializer):
 class UserSerializer(serializers.ModelSerializer):
     email=serializers.EmailField(max_length=255)
     name=serializers.CharField(max_length=255)
-    is_active=serializers.BooleanField()
-    staff=serializers.BooleanField()
+    is_active=serializers.BooleanField(read_only=True)
+    staff=serializers.BooleanField(read_only=True)
     password=serializers.CharField(write_only=True, allow_null=False)
     password2=serializers.CharField(write_only=True, style={'input_type':'password'})
 
@@ -36,17 +36,12 @@ class UserSerializer(serializers.ModelSerializer):
         validated_data.pop('user', None)
         email=validated_data.pop('email')
         name=validated_data.pop('name')
-        staff=validated_data.pop('staff')
-        is_active=validated_data.pop('is_active')
-        email=validated_data.pop('email')
         password=validated_data.pop('password')
 
         # creation de l'utilisateur
         user=User.objects.create_user(
             email=email,
             name=name,
-            staff=staff,
-            is_active=is_active,
             password=password
         )
         return user
@@ -55,14 +50,10 @@ class UserSerializer(serializers.ModelSerializer):
         validated_data.pop('user', None)
         email=validated_data.pop('email', instance.email)
         name=validated_data.pop('name', instance.name)
-        staff=validated_data.pop('staff', instance.staff)
-        is_active=validated_data.pop('email', instance.is_active)
 
         # mise en jour
         instance.email=email
         instance.name=name
-        instance.staff=staff
-        instance.is_active=is_active
 
         instance.save()
         return instance
@@ -75,3 +66,18 @@ class UserLoginSerializer(serializers.ModelSerializer):
 
 class UserChangePasswordSerializer(serializers.Serializer):
     password=serializers.CharField(max_length=255, style={'input_type':'password'}, write_only=True)
+    password2=serializers.CharField(max_length=255, style={'input_type':'password'}, write_only=True)
+
+    class Meta:
+        fields=['password', 'password2']
+
+    def validate(self, attrs):
+        password=attrs.get('password')
+        password2=attrs.get('password2')
+        # recuperation de l'utilisateur connecter
+        user=self.context.get('user')
+        if password != password2:
+            raise serializers.ValidationError("Le mot de passe  et celle de confirmation ne correspondent pas")
+        user.set_password(password)
+        user.save()
+        return attrs

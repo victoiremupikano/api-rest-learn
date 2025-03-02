@@ -1,6 +1,6 @@
 from django.shortcuts import render
 import django
-from rest_framework.response import Response
+from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework import permissions, generics, status
 from services.mixins import QSFilterWithFacture
 from services.image import add_photo
@@ -12,10 +12,16 @@ from . models import Produit, Client, Facture, Transation
 
 # produit
 class ProduitDetailView(generics.RetrieveAPIView):
+    authentication_classes=[JWTAuthentication]
+    permission_classes=[permissions.IsAuthenticated]
+
     queryset=Produit.objects.all()
     serializer_class=ProduitSerializer
     
 class ProduitListCreateView(generics.ListCreateAPIView):
+    authentication_classes=[JWTAuthentication]
+    permission_classes=[permissions.IsAuthenticated]
+
     queryset=Produit.objects.all()
     serializer_class=ProduitSerializer  
     
@@ -28,6 +34,9 @@ class ProduitListCreateView(generics.ListCreateAPIView):
         serializer.save(image=image)
 
 class ProduitUpdateView(generics.UpdateAPIView):
+    authentication_classes=[JWTAuthentication]
+    permission_classes=[permissions.IsAuthenticated]
+
     queryset=Produit.objects.all()
     serializer_class=ProduitSerializer   
     
@@ -42,6 +51,9 @@ class ProduitUpdateView(generics.UpdateAPIView):
         serializer.save(image=image)
 
 class ProduitDeleteView(generics.DestroyAPIView):
+    authentication_classes=[JWTAuthentication]
+    permission_classes=[permissions.IsAuthenticated]
+
     queryset=Produit.objects.all()
     serializer_class=ProduitSerializer   
     
@@ -50,22 +62,34 @@ class ProduitDeleteView(generics.DestroyAPIView):
 
 # client
 class ClientDetailView(generics.RetrieveAPIView):
+    authentication_classes=[JWTAuthentication]
+    permission_classes=[permissions.IsAuthenticated]
+
     queryset=Client.objects.all()
     serializer_class=ClientSerializer
     
 class ClientListCreateView(generics.ListCreateAPIView):
+    authentication_classes=[JWTAuthentication]
+    permission_classes=[permissions.IsAuthenticated]
+
     queryset=Client.objects.all()
     serializer_class=ClientSerializer  
 
 
     
 class ClientUpdateView(generics.UpdateAPIView):
+    authentication_classes=[JWTAuthentication]
+    permission_classes=[permissions.IsAuthenticated]
+
     queryset=Client.objects.all()
     serializer_class=ClientSerializer   
     
     lookup_field='pk'
       
 class ClientDeleteView(generics.DestroyAPIView):
+    authentication_classes=[JWTAuthentication]
+    permission_classes=[permissions.IsAuthenticated]
+
     queryset=Client.objects.all()
     serializer_class=ClientSerializer   
     
@@ -74,10 +98,16 @@ class ClientDeleteView(generics.DestroyAPIView):
 
 # facture
 class FactureDetailView(generics.RetrieveAPIView):
+    authentication_classes=[JWTAuthentication]
+    permission_classes=[permissions.IsAuthenticated]
+
     queryset=Facture.objects.all()
     serializer_class=FactureSerializer
     
 class FactureListCreateView(generics.ListCreateAPIView):
+    authentication_classes=[JWTAuthentication]
+    permission_classes=[permissions.IsAuthenticated]
+
     queryset=Facture.objects.all()
     serializer_class=FactureSerializer  
     
@@ -87,6 +117,9 @@ class FactureListCreateView(generics.ListCreateAPIView):
         serializer.save(client=client)
     
 class FactureUpdateView(generics.UpdateAPIView):
+    authentication_classes=[JWTAuthentication]
+    permission_classes=[permissions.IsAuthenticated]
+
     queryset=Facture.objects.all()
     serializer_class=FactureSerializer   
     
@@ -98,6 +131,9 @@ class FactureUpdateView(generics.UpdateAPIView):
         serializer.save(client=client)
       
 class FactureDeleteView(generics.DestroyAPIView):
+    authentication_classes=[JWTAuthentication]
+    permission_classes=[permissions.IsAuthenticated]
+
     queryset=Facture.objects.all()
     serializer_class=FactureSerializer   
     
@@ -105,12 +141,18 @@ class FactureDeleteView(generics.DestroyAPIView):
 
 # transaction
 class TransactionDetailView(generics.RetrieveAPIView):
+    authentication_classes=[JWTAuthentication]
+    permission_classes=[permissions.IsAuthenticated]
+
     queryset = Transation.objects.all()  # pylint: disable=E1101
     serializer_class = TransactionSerializer
     
     # ListCreateAPIView est une methode generic qui permet de lister plusieurs itemes et de creer les donnees
 
 class TransactionListCreate(generics.ListCreateAPIView):
+    authentication_classes=[JWTAuthentication]
+    permission_classes=[permissions.IsAuthenticated]
+
     queryset=Transation.objects.all()  # pylint: disable=E1101
     serializer_class=TransactionSerializer
     
@@ -124,10 +166,16 @@ class TransactionListCreate(generics.ListCreateAPIView):
 class TransactionWithFactureListCreate(
     QSFilterWithFacture,
     generics.ListAPIView):
+    authentication_classes=[JWTAuthentication]
+    permission_classes=[permissions.IsAuthenticated]
+
     queryset=Transation.objects.all()  # pylint: disable=E1101
     serializer_class=TransactionSerializer    
     
 class TransactionUpdateView(generics.UpdateAPIView):
+    authentication_classes=[JWTAuthentication]
+    permission_classes=[permissions.IsAuthenticated]
+
     queryset=Transation.objects.all()    # pylint: disable=E1101
     serializer_class=TransactionSerializer
     lookup_field='pk'
@@ -142,6 +190,9 @@ class TransactionUpdateView(generics.UpdateAPIView):
   # DestroyAPIView est une methode generic qui permet la suppression des donnees  
 
 class TransactionDeleteView(generics.DestroyAPIView):
+    authentication_classes=[JWTAuthentication]
+    permission_classes=[permissions.IsAuthenticated]
+    
     queryset=Transation.objects.all()      # pylint: disable=E1101
     serializer_class=TransactionSerializer
     lookup_field='pk'
