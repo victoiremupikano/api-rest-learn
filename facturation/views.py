@@ -3,6 +3,7 @@ from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework import  generics
 from facturation.services.images import add_photo
+from facturation.services.mixins import QSFilterWithFacture
 # importation des modesls
 from facturation.models import Produit, Client, Facture, Transation 
 # importation des serializers
@@ -16,7 +17,7 @@ class ProduitDetailView(generics.RetrieveAPIView):
 class ProduitListCreate(generics.ListCreateAPIView):
     queryset=Produit.objects.all()  # pylint: disable=E1101
     serializer_class=ProduitSerializer
-    
+    #methode pour recuoerer l'image
     def perform_create(self,serializer):
         image64=serializer.validated_data.get('image64')
         if image64 is None or image64 =="":
@@ -107,12 +108,15 @@ class TransactionListCreate(generics.ListCreateAPIView):
     def perform_create(self,serializer):
         facture_id=serializer.validated_data.get('facture_id')
         facture=Facture.objects.get(id=facture_id)
-        serializer.save(facture=facture)
-        
         produit_id=serializer.validated_data.get('produit_id')
         produit=Produit.objects.get(id=produit_id)
-        serializer.save(produit=produit)
+        serializer.save(facture=facture,produit=produit)
     
+
+class TransactionWithFactureCreate(
+    QSFilterWithFacture,generics.ListAPIView):
+    queryset=Transation.objects.all()  # pylint: disable=E1101
+    serializer_class=TransactionSerializer
     
  # UpdateAPIView est une methode generic qui permet la modification  des donnees
 class TransactionUpdateView(generics.UpdateAPIView):
@@ -123,11 +127,9 @@ class TransactionUpdateView(generics.UpdateAPIView):
     def perform_update(self,serializer):
         facture_id=serializer.validated_data.get('facture_id')
         facture=Facture.objects.get(id=facture_id)
-        serializer.save(facture=facture)
-        
         produit_id=serializer.validated_data.get('produit_id')
         produit=Produit.objects.get(id=produit_id)
-        serializer.save(produit=produit)
+        serializer.save(facture=facture,produit=produit)
     
   # DestroyAPIView est une methode generic qui permet la suppression des donnees  
 class TransactionDeleteView(generics.DestroyAPIView):

@@ -26,7 +26,8 @@ from .views import(
     TransactionDetailView,
     TransactionListCreate,
     TransactionUpdateView,
-    TransactionDeleteView
+    TransactionDeleteView,
+    
     
 )
 
@@ -45,15 +46,16 @@ urlpatterns = [
     
     # urls vues du facture
     
-    path('Facture-detail/<int:pk>/',FactureDetailView.as_view(),name='Facture-detail'),
-    path('Facture-list-create/',FactureListCreate.as_view(),name='Facture-list-create'),
-    path('Facture-update-view/<int:pk>/',FactureUpdateView.as_view(),name='Facture-update-view'),
-    path('Facture-delete/<int:pk>/',FactureDeleteView.as_view(),name='Facture-delete'),
+    path('facture-detail/<int:pk>/',FactureDetailView.as_view(),name='Facture-detail'),
+    path('facture-list-create/',FactureListCreate.as_view(),name='Facture-list-create'),
+    path('facture-update/<int:pk>/',FactureUpdateView.as_view(),name='Facture-update-view'),
+    path('facture-delete/<int:pk>/',FactureDeleteView.as_view(),name='Facture-delete'),
     
     # urls vues des transactions
     
-    path('Transaction-detail/<int:pk>/',TransactionDetailView.as_view(),name='Transaction-detail'),
-    path('Transaction-list-create/',TransactionListCreate.as_view(),name='Transaction-list-create'),
-    path('Transaction-update-view/<int:pk>/',TransactionUpdateView.as_view(),name='Transaction-update-view'),
-    path('Transaction-delete/<int:pk>/',TransactionDeleteView.as_view(),name='Transaction-delete')
+    path('transaction-detail/<int:pk>/',TransactionDetailView.as_view(),name='Transaction-detail'),
+    path('transaction_liste_par_facture/<int:pk>/',TransactionDetailView.as_view(),name='Transaction-detail'), 
+    path('transaction-list-create/',TransactionListCreate.as_view(),name='Transaction-list-create'),
+    path('transaction-update-view/<int:pk>/',TransactionUpdateView.as_view(),name='Transaction-update-view'),
+    path('transaction-delete/<int:pk>/',TransactionDeleteView.as_view(),name='Transaction-delete')
 ]
